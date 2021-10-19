@@ -9,8 +9,9 @@ This Terraform module builds out a best practice reference architecture for runn
 
 # Solution
 
-![Alt text](./diagram/diagram.drawio.svg)
-<img src="./diagram/diagram.drawio.svg">
+This is what this module aims to build:
+
+![Solution Diagram](./diagram/diagram.drawio.svg)
 
 # Usage 
 
