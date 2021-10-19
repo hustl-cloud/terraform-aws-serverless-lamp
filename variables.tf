@@ -17,6 +17,7 @@ variable "fqdns" {
 
 variable "acm_certificate_arn" {
   description = "ACM certificate arn to use"
+  type = string
 }
 
 # Defaults
