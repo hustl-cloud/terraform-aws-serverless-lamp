@@ -15,6 +15,10 @@ variable "fqdns" {
   type        = list(any)
 }
 
+variable "acm_certificate_arn" {
+  description = "ACM certificate arn to use"
+}
+
 # Defaults
 
 variable "laravel_root" {
