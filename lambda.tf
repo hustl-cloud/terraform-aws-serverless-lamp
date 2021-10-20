@@ -1,9 +1,9 @@
 resource "aws_lambda_function" "web" {
-  filename         = "${var.laravel_root}/${var.laravel_zip}"
+  filename         = "${var.app_dir}/${var.app_artifact}"
   function_name    = "${local.prefix}-web"
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = "public/index.php"
-  source_code_hash = filebase64sha256("${var.laravel_root}/${var.laravel_zip}")
+  source_code_hash = filebase64sha256("${var.app_dir}/${var.app_artifact}")
 
   runtime     = "provided.al2"
   memory_size = 1024
@@ -15,17 +15,26 @@ resource "aws_lambda_function" "web" {
     }
   }
 
-  layers     = ["arn:aws:lambda:us-east-1:209497400698:layer:php-80-fpm:21"]
-  depends_on = [aws_cloudwatch_log_group.web]
+  layers     = ["arn:aws:lambda:${var.aws_region}:${var.bref_aws_account_id}:layer:${var.bref_fpm_version}"]
+
+  vpc_config {
+    security_group_ids = var.security_groups
+    subnet_ids = var.subnets
+  }
+
+  depends_on = [
+    null_resource.serverless_package,
+    aws_cloudwatch_log_group.web
+  ]
 
 }
 
 resource "aws_lambda_function" "artisan" {
-  filename         = "${var.laravel_root}/${var.laravel_zip}"
+  filename         = "${var.app_dir}/${var.app_artifact}"
   function_name    = "${local.prefix}-artisan"
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = "artisan"
-  source_code_hash = filebase64sha256("${var.laravel_root}/${var.laravel_zip}")
+  source_code_hash = filebase64sha256("${var.app_dir}/${var.app_artifact}")
 
   runtime     = "provided.al2"
   memory_size = 1024
@@ -38,26 +47,18 @@ resource "aws_lambda_function" "artisan" {
   }
 
   layers = [
-    "arn:aws:lambda:us-east-1:209497400698:layer:php-80:21",
-    "arn:aws:lambda:us-east-1:209497400698:layer:console:46"
+    "arn:aws:lambda:${var.aws_region}:${var.bref_aws_account_id}:layer:${var.bref_php_version}",
+    "arn:aws:lambda:${var.aws_region}:${var.bref_aws_account_id}:layer:${var.bref_console_version}"
+  ]
+  
+  vpc_config {
+    security_group_ids = var.security_groups
+    subnet_ids = var.subnets
+  }
+
+  depends_on = [
+    null_resource.serverless_package,
+    aws_cloudwatch_log_group.artisan
   ]
 
-  depends_on = [aws_cloudwatch_log_group.artisan]
-
 }
-
-
-
-
-
-
-
-
-# resource "aws_lambda_permission" "api_gw" {
-#   statement_id  = "AllowExecutionFromAPIGateway"
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.default.function_name
-#   principal     = "apigateway.amazonaws.com"
-
-#   source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
-# }
