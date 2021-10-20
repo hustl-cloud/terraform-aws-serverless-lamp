@@ -15,7 +15,7 @@ resource "aws_lambda_function" "web" {
     }
   }
 
-  layers     = ["arn:aws:lambda:${var.aws_region}:${var.bref_aws_account_id}:layer:${var.bref_fpm_version}"]
+  layers     = ["arn:aws:lambda:${data.aws_region.current}:${var.bref_aws_account_id}:layer:${var.bref_fpm_version}"]
 
   vpc_config {
     security_group_ids = var.security_groups
@@ -47,8 +47,8 @@ resource "aws_lambda_function" "artisan" {
   }
 
   layers = [
-    "arn:aws:lambda:${var.aws_region}:${var.bref_aws_account_id}:layer:${var.bref_php_version}",
-    "arn:aws:lambda:${var.aws_region}:${var.bref_aws_account_id}:layer:${var.bref_console_version}"
+    "arn:aws:lambda:${data.aws_region.current}:${var.bref_aws_account_id}:layer:${var.bref_php_version}",
+    "arn:aws:lambda:${data.aws_region.current}:${var.bref_aws_account_id}:layer:${var.bref_console_version}"
   ]
   
   vpc_config {
