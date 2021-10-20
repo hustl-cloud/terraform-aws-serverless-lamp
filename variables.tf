@@ -9,11 +9,6 @@ variable "app_env" {
   type        = string
 }
 
-variable "app_dir" {
-  description = "Application directory to package lambda from"
-  type = string
-}
-
 variable "fqdns" {
   description = "Fully-qualified domain name to use for site"
   type        = list(any)
@@ -29,7 +24,7 @@ variable "acm_certificate_arn" {
 variable "app_artifact" {
   description = "Application artifact file name packaged by Serverless Framework"
   type        = string
-  default     = "serverless-lamp.zip"
+  default     = "./serverless-lamp.zip"
 }
 
 ## vpc specific, not applied if omitted
