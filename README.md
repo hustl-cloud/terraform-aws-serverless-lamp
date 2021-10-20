@@ -21,7 +21,7 @@ module "serverless-lamp" {
   app_name     = "your_app_name"
   app_env      = "dev"
   fqdns        = ["yoursite.com"]
-  app_dir = "${path.root}/../src"
+  app_artifact = "${path.root}/.serverless/laravel.zip"
   subnets = []
   security_groups = []
 }
